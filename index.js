@@ -8,6 +8,7 @@ var promisify = require("es6-promisify")
 
 var _unzip = promisify(RNZipArchive.unzip)
 var _zip = promisify(RNZipArchive.zip)
+var _unzipWithPassword = promisify(RNZipArchive.unzipWithPassword)
 var _unzipAssets = RNZipArchive.unzipAssets ? promisify(RNZipArchive.unzipAssets) : undefined
 
 var _error = (err) => {
@@ -17,6 +18,10 @@ var _error = (err) => {
 var ZipArchive = {
   unzip(source, target) {
     return _unzip(source, target)
+      .catch(_error)
+  },
+  unzipWithPassword(source, target, password) {
+    return _unzipWithPassword(source, target, password)
       .catch(_error)
   },
   zip(source, target) {

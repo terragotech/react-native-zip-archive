@@ -32,6 +32,21 @@ RCT_EXPORT_METHOD(unzip:(NSString *)zipPath destinationPath:(NSString *)destinat
     }
 }
 
+RCT_EXPORT_METHOD(unzipWithPassword:(NSString *)zipPath destinationPath:(NSString *)destinationPath password:(NSString *)password callback:(RCTResponseSenderBlock)callback) {
+
+    [self zipArchiveProgressEvent:0 total:1]; // force 0%
+
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:destinationPath password:password delegate:self];
+
+    [self zipArchiveProgressEvent:1 total:1]; // force 100%
+
+    if (success) {
+        callback(@[[NSNull null]]);
+    } else {
+        callback(@[@"unzip error"]);
+    }
+}
+
 RCT_EXPORT_METHOD(zip:(NSString *)zipPath destinationPath:(NSString *)destinationPath callback:(RCTResponseSenderBlock)callback) {
     
     [self zipArchiveProgressEvent:0 total:1]; // force 0%

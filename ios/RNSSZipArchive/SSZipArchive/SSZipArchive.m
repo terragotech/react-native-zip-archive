@@ -76,6 +76,10 @@
     return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:YES password:nil error:nil delegate:delegate progressHandler:nil completionHandler:nil];
 }
 
++ (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination password:(NSString *)password delegate:(id<SSZipArchiveDelegate>)delegate {
+    return [self unzipFileAtPath:path toDestination:destination overwrite:YES password:password error:nil delegate:delegate];
+}
+
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(nullable NSString *)password error:(NSError **)error delegate:(nullable id<SSZipArchiveDelegate>)delegate
 {
     return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password error:error delegate:delegate progressHandler:nil completionHandler:nil];
