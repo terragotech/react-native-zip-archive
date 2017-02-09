@@ -48,12 +48,13 @@ public class Zip4jArchive {
     /**
      *
      * @param sourcePath
-     * @param destinationPath
+     * @param destPathWithName
      */
-    public static void zip(String sourcePath,String destinationPath,String password){
+    public static JSONObject zip(String sourcePath,String destPathWithName,String password){
+        JSONObject jsonObject = new JSONObject();
         try {
             File sourceFolder = new File(sourcePath);
-            ZipFile zipFile = new ZipFile(destinationPath);
+            ZipFile zipFile = new ZipFile(destPathWithName);
             ZipParameters parameters = new ZipParameters();
             parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
             parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
@@ -69,9 +70,22 @@ public class Zip4jArchive {
                         zipFile.addFolder(sourceFile,parameters);
                     }
                 }
+                jsonObject.put("isSuccess", true);
+                jsonObject.put("response", "success");
+            }else{
+                jsonObject.put("isSuccess", false);
+                jsonObject.put("response", "Source folder not found.");
             }
         }catch (Exception e){
             e.printStackTrace();
+               try{
+                   jsonObject.put("isSuccess", false);
+                   jsonObject.put("response", "Error.");
+               }catch (Exception e1){
+
+               }
+
         }
+        return jsonObject;
     }
 }

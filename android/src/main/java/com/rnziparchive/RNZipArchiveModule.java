@@ -47,7 +47,15 @@ public class RNZipArchiveModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void zip(String fileOrDirectory, String destDirectory, Callback callback) {
+  public void zip(String fileOrDirectory, String destDirectory,  String password,Callback callback) {
+    JSONObject response = Zip4jArchive.zip(fileOrDirectory, destDirectory, password);
+    try{
+      boolean isSuccess = response.getBoolean("isSuccess");
+      String message = response.getString("response");
+      callback.invoke(makePayloadResponse(isSuccess, message));
+    }catch (Exception e){
+      e.printStackTrace();
+    }
   }
 
   private void zipStream(String[] files, String destFile, long totalSize, Callback completionCallback) {
@@ -62,6 +70,13 @@ public class RNZipArchiveModule extends ReactContextBaseJavaModule {
   private WritableMap makeErrorPayload(String message, Exception ex) {
     WritableMap error = Arguments.createMap();
     error.putString("message", String.format("%s (%s)", message, ex.getMessage()));
+    return error;
+  }
+
+  private WritableMap makePayloadResponse(boolean success,String message){
+    WritableMap error = Arguments.createMap();
+    error.putString("message", message);
+    error.putBoolean("success",success);
     return error;
   }
 
