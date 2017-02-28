@@ -28,6 +28,10 @@ var ZipArchive = {
     return _zip(source, target)
       .catch(_error)
   },
+  zip(source, target, password) {
+    return _zip(source, target, password)
+      .catch(_error)
+  },
   unzipAssets(source, target) {
     if (!_unzipAssets) {
       throw new Error("unzipAssets not supported on this platform");
