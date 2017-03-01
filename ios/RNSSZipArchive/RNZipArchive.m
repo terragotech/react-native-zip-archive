@@ -62,7 +62,7 @@ RCT_EXPORT_METHOD(zip:(NSString *)zipPath destinationPath:(NSString *)destinatio
     }
 }
 
-RCT_EXPORT_METHOD(zip:(NSString *)zipPath destinationPath:(NSString *)destinationPath Password:(NSString*)password callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(zipWithPassword:(NSString *)zipPath destinationPath:(NSString *)destinationPath Password:(NSString*)password callback:(RCTResponseSenderBlock)callback) {
     
     BOOL isDir;
     BOOL exists = [fm fileExistsAtPath:zipPath isDirectory:&isDir];
@@ -76,7 +76,7 @@ RCT_EXPORT_METHOD(zip:(NSString *)zipPath destinationPath:(NSString *)destinatio
     
     [self zipArchiveProgressEvent:0 total:1]; // force 0%
     
-    BOOL success = [SSZipArchive createZipFileAtPath:destinationPath withContentsOfDirectory:zipPath keepParentDirectory:FALSE withPassword:password];
+    BOOL success = [SSZipArchive createZipFileAtPath:destinationPath withContentsOfDirectory:zipPath keepParentDirectory:TRUE withPassword:password];
     
     [self zipArchiveProgressEvent:1 total:1]; // force 100%
     
