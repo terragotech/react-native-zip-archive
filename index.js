@@ -8,7 +8,7 @@ var RNZipArchive = React.NativeModules.RNZipArchive
 var _unzip = RNZipArchive.unzip
 var _zip = RNZipArchive.zip
 var _zipWithPassword = RNZipArchive.zipWithPassword
-var _unzipWithPassword = RNZipArchive.unzipWithPassword)
+var _unzipWithPassword = RNZipArchive.unzipWithPassword
 var _unzipAssets = RNZipArchive.unzipAssets ? RNZipArchive.unzipAssets : undefined
 
 var _error = (err) => {
