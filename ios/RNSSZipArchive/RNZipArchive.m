@@ -17,7 +17,7 @@
 
 RCT_EXPORT_MODULE();
 
-RCT_EXPORT_METHOD(unzip:(NSString *)zipPath destinationPath:(NSString *)destinationPath callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(unzip:(NSString *)zipPath destinationPath:(NSString *)destinationPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
 
     [self zipArchiveProgressEvent:0 total:1]; // force 0%
 
@@ -26,13 +26,13 @@ RCT_EXPORT_METHOD(unzip:(NSString *)zipPath destinationPath:(NSString *)destinat
     [self zipArchiveProgressEvent:1 total:1]; // force 100%
 
     if (success) {
-        callback(@[[NSNull null]]);
+        resolve([NSNull null]);
     } else {
-        callback(@[@"unzip error"]);
+        reject(@"zip_error", @"unable to zip", @"unzip error");
     }
 }
 
-RCT_EXPORT_METHOD(unzipWithPassword:(NSString *)zipPath destinationPath:(NSString *)destinationPath password:(NSString *)password callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(unzipWithPassword:(NSString *)zipPath destinationPath:(NSString *)destinationPath password:(NSString *)password resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
 
     [self zipArchiveProgressEvent:0 total:1]; // force 0%
 
@@ -41,13 +41,13 @@ RCT_EXPORT_METHOD(unzipWithPassword:(NSString *)zipPath destinationPath:(NSStrin
     [self zipArchiveProgressEvent:1 total:1]; // force 100%
 
     if (success) {
-        callback(@[[NSNull null]]);
+        resolve([NSNull null]);
     } else {
-        callback(@[@"unzip error"]);
+         reject(@"zip_error", @"unable to zip", @"unzip error");
     }
 }
 
-RCT_EXPORT_METHOD(zip:(NSString *)zipPath destinationPath:(NSString *)destinationPath callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(zip:(NSString *)zipPath destinationPath:(NSString *)destinationPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)  {
     
     [self zipArchiveProgressEvent:0 total:1]; // force 0%
     
@@ -56,9 +56,9 @@ RCT_EXPORT_METHOD(zip:(NSString *)zipPath destinationPath:(NSString *)destinatio
     [self zipArchiveProgressEvent:1 total:1]; // force 100%
     
     if (success) {
-        callback(@[[NSNull null]]);
+        resolve([NSNull null]);
     } else {
-        callback(@[@"unzip error"]);
+        reject(@"zip_error", @"unable to zip", @"zip error");
     }
 }
 
