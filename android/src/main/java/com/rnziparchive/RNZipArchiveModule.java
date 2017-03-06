@@ -49,6 +49,7 @@ public class RNZipArchiveModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void unzipWithPassword(String zipFilePath, String destDirectory, String password, Promise promise) {
         JSONObject response = Zip4jArchive.unzip(new File(zipFilePath), destDirectory, password);
+        System.out.println("zipPath is "+zipFilePath+"   "+password);
         try {
             boolean isSuccess = response.getBoolean("isSuccess");
 
