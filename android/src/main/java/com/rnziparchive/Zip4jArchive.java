@@ -28,7 +28,7 @@ public class Zip4jArchive {
         String response = "";
         try {
             ZipFile zipFile = new ZipFile(compressedFile);
-            if (zipFile.isEncrypted()) {
+            if (zipFile.isEncrypted() && password != null) {
                 zipFile.setPassword(password);
             }
             zipFile.extractAll(destinationPath);
