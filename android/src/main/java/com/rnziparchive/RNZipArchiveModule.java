@@ -26,8 +26,25 @@ public class RNZipArchiveModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void unzip(String zipFilePath, String destDirectory, String password, Callback callback) {
-    JSONObject response = Zip4jArchive.unzip(new File(zipFilePath), destDirectory, password);
+  public void unzip(String zipFilePath, String destDirectory, Callback callback) {
+    JSONObject response = Zip4jArchive.unzip(new File(zipFilePath), destDirectory);
+    try{
+      boolean isSuccess = response.getBoolean("isSuccess");
+
+      if(isSuccess) {
+        callback.invoke(null, null);
+      }else {
+        String message = response.getString("response");
+        callback.invoke(makeErrorPayloadFromMessage("Couldn't open file - ", message));
+      }
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+  }
+
+  @ReactMethod
+  public void unzipWithPassword(String zipFilePath, String destDirectory, String password, Callback callback) {
+    JSONObject response = Zip4jArchive.unzipWithPassword(new File(zipFilePath), destDirectory, password);
     try{
       boolean isSuccess = response.getBoolean("isSuccess");
 

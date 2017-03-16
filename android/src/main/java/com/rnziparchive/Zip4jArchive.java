@@ -18,7 +18,36 @@ public class Zip4jArchive {
      * @param compressedFile
      * @param destinationPath
      */
-    public static JSONObject unzip(File compressedFile,String destinationPath,String password){
+    public static JSONObject unzip(File compressedFile,String destinationPath){
+        JSONObject jsonObject = new JSONObject();
+        boolean isSuccess = true;
+        String response = "";
+        try {
+            ZipFile zipFile = new ZipFile(compressedFile);
+            zipFile.extractAll(destinationPath);
+            compressedFile.delete();
+            isSuccess = true;
+            response = destinationPath;
+        } catch (Exception e){
+            e.printStackTrace();
+            isSuccess = false;
+            response = e.getMessage();
+        }
+        try{
+            jsonObject.put("isSuccess", isSuccess);
+            jsonObject.put("response", response);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    /**
+     * unzip password protected zip files
+     * @param compressedFile
+     * @param destinationPath
+     */
+    public static JSONObject unzipWithPassword(File compressedFile,String destinationPath,String password){
         JSONObject jsonObject = new JSONObject();
         boolean isSuccess = true;
         String response = "";
