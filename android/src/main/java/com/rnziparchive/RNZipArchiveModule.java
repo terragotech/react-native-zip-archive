@@ -99,21 +99,6 @@ public class RNZipArchiveModule extends ReactContextBaseJavaModule {
         }
     }
 
-    private void zipStream(String[] files, String destFile, long totalSize, Callback completionCallback) {
-        try {
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-
-    private WritableMap makeErrorPayload(String message, Exception ex) {
-        WritableMap error = Arguments.createMap();
-        error.putString("message", String.format("%s (%s)", message, ex.getMessage()));
-        return error;
-    }
-
     private WritableMap makePayloadResponse(boolean success, String message) {
         WritableMap error = Arguments.createMap();
         error.putString("message", message);
@@ -121,9 +106,4 @@ public class RNZipArchiveModule extends ReactContextBaseJavaModule {
         return error;
     }
 
-    private WritableMap makeErrorPayloadFromMessage(String message, String ex) {
-        WritableMap error = Arguments.createMap();
-        error.putString("message", String.format("%s (%s)", message, ex));
-        return error;
-    }
 }
