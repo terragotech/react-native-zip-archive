@@ -518,7 +518,7 @@
 }
 
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath withPassword:(nullable NSString *)password{
-    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:NO withPassword:password];
+    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:YES withPassword:password];
 }
 
 

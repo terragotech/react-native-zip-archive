@@ -1,5 +1,7 @@
 package com.rnziparchive;
 
+import com.facebook.react.bridge.Promise;
+
 import android.content.res.AssetFileDescriptor;
 import android.util.Log;
 
@@ -10,96 +12,98 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+
 import org.json.JSONObject;
+
 import java.io.File;
 
 
 public class RNZipArchiveModule extends ReactContextBaseJavaModule {
 
-  public RNZipArchiveModule(ReactApplicationContext reactContext) {
-    super(reactContext);
-  }
-
-  @Override
-  public String getName() {
-    return "RNZipArchive";
-  }
-
-  @ReactMethod
-  public void unzip(String zipFilePath, String destDirectory, Callback callback) {
-    JSONObject response = Zip4jArchive.unzip(new File(zipFilePath), destDirectory);
-    try{
-      boolean isSuccess = response.getBoolean("isSuccess");
-
-      if(isSuccess) {
-        callback.invoke(null, null);
-      }else {
-        String message = response.getString("response");
-        callback.invoke(makeErrorPayloadFromMessage("Couldn't open file - ", message));
-      }
-    }catch (Exception e){
-      e.printStackTrace();
+    public RNZipArchiveModule(ReactApplicationContext reactContext) {
+        super(reactContext);
     }
-  }
 
-  @ReactMethod
-  public void unzipWithPassword(String zipFilePath, String destDirectory, String password, Callback callback) {
-    JSONObject response = Zip4jArchive.unzipWithPassword(new File(zipFilePath), destDirectory, password);
-    try{
-      boolean isSuccess = response.getBoolean("isSuccess");
-
-      if(isSuccess) {
-        callback.invoke(null, null);
-      }else {
-        String message = response.getString("response");
-        callback.invoke(makeErrorPayloadFromMessage("Couldn't open file - ", message));
-      }
-    }catch (Exception e){
-      e.printStackTrace();
+    @Override
+    public String getName() {
+        return "RNZipArchive";
     }
-  }
 
-  @ReactMethod
-  public void unzipAssets(String assetsPath, String destDirectory, Callback completionCallback) {
-  }
+    @ReactMethod
+    public void unzip(String zipFilePath, String destDirectory,Promise promise) {
+        JSONObject response = Zip4jArchive.unzip(new File(zipFilePath), destDirectory, null);
+        try {
+            boolean isSuccess = response.getBoolean("isSuccess");
 
-  @ReactMethod
-  public void zip(String fileOrDirectory, String destDirectory,  String password,Callback callback) {
-    JSONObject response = Zip4jArchive.zip(fileOrDirectory, destDirectory, password);
-    try{
-      boolean isSuccess = response.getBoolean("isSuccess");
-      String message = response.getString("response");
-      callback.invoke(makePayloadResponse(isSuccess, message));
-    }catch (Exception e){
-      e.printStackTrace();
+            if (isSuccess) {
+                promise.resolve("Success");
+            } else {
+                String message = response.getString("response");
+                promise.reject("unzip error"+message);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject("unzip error"+e);
+        }
     }
-  }
+    @ReactMethod
+    public void unzipWithPassword(String zipFilePath, String destDirectory, String password, Promise promise) {
+        JSONObject response = Zip4jArchive.unzip(new File(zipFilePath), destDirectory, password);
+        System.out.println("UnzipPath is "+zipFilePath+"   "+password +" "+response);
+        try {
+            boolean isSuccess = response.getBoolean("isSuccess");
 
-  private void zipStream(String[] files, String destFile, long totalSize, Callback completionCallback) {
-    try {
-
-    } catch (Exception ex) {
-      ex.printStackTrace();
+            if (isSuccess) {
+                System.out.println("success");
+                promise.resolve("Success");
+            } else {
+                String message = response.getString("response");
+                System.out.println("message"+message);
+                promise.reject("unzip error"+message);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject("unzip error"+e);
+        }
     }
-  }
 
+    @ReactMethod
+    public void unzipAssets(String assetsPath, String destDirectory, Promise promise) {
 
-  private WritableMap makeErrorPayload(String message, Exception ex) {
-    WritableMap error = Arguments.createMap();
-    error.putString("message", String.format("%s (%s)", message, ex.getMessage()));
-    return error;
-  }
+    }
 
-  private WritableMap makePayloadResponse(boolean success,String message){
-    WritableMap error = Arguments.createMap();
-    error.putString("message", message);
-    error.putBoolean("success",success);
-    return error;
-  }
+    //zip,unip,zipwith password,unzip with password.
+    @ReactMethod
+    public void zip(String fileOrDirectory, String destDirectory, Promise promise) {
+        JSONObject response = Zip4jArchive.zip(fileOrDirectory, destDirectory, null);
+        try {
+            boolean isSuccess = response.getBoolean("isSuccess");
+            String message = response.getString("response");
+            promise.resolve(makePayloadResponse(isSuccess, message));
+        } catch (Exception e) {
+            promise.reject(null, "Couldn't open file " + fileOrDirectory + ". ");
+            e.printStackTrace();
+        }
+    }
+    @ReactMethod
+    public void zipWithPassword(String fileOrDirectory, String destDirectory, String password, Promise promise) {
+        JSONObject response = Zip4jArchive.zip(fileOrDirectory, destDirectory, password);
+        System.out.println("zipPath with password is "+fileOrDirectory+"   "+password);
+        try {
+            boolean isSuccess = response.getBoolean("isSuccess");
+            String message = response.getString("response");
+            promise.resolve(makePayloadResponse(isSuccess, message));
+        } catch (Exception e) {
+            promise.reject(null, "Couldn't open file " + fileOrDirectory + ". ");
+            e.printStackTrace();
+        }
+    }
 
-  private WritableMap makeErrorPayloadFromMessage(String message, String ex) {
-    WritableMap error = Arguments.createMap();
-    error.putString("message", String.format("%s (%s)", message, ex));
-    return error;
-  }
+    private WritableMap makePayloadResponse(boolean success, String message) {
+        WritableMap error = Arguments.createMap();
+        error.putString("message", message);
+        error.putBoolean("success", success);
+        return error;
+    }
+
 }
