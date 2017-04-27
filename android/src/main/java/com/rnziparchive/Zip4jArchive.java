@@ -72,7 +72,9 @@ public class Zip4jArchive {
                     if (sourceFile.isFile()) {
                         zipFile.addFile(sourceFile, parameters);
                     } else {
-                        zipFile.addFolder(sourceFile, parameters);
+                        if(sourceFile.listFiles().length > 0) {
+                            zipFile.addFolder(sourceFile, parameters);
+                        }
                     }
                 }
                 jsonObject.put("isSuccess", true);
